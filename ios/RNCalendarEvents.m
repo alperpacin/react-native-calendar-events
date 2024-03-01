@@ -780,14 +780,25 @@ RCT_EXPORT_METHOD(checkPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCT
 
 RCT_EXPORT_METHOD(requestPermissions:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
-        NSString *status = granted ? @"authorized" : @"denied";
-        if (!error) {
-            resolve(status);
-        } else {
-            reject(@"error", @"authorization request error", error);
-        }
-    }];
+    if (@available(iOS 17.0, *)) {
+        [self.eventStore requestFullAccessToEventsWithCompletion:^(BOOL granted, NSError *error) {
+            NSString *status = granted ? @"authorized" : @"denied";
+            if (!error) {
+                resolve(status);
+            } else {
+                reject(@"error", @"authorization request error", error);
+            }
+        }];
+    } else {
+        [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *error) {
+            NSString *status = granted ? @"authorized" : @"denied";
+            if (!error) {
+                resolve(status);
+            } else {
+                reject(@"error", @"authorization request error", error);
+            }
+        }];
+    }
 }
 
 RCT_EXPORT_METHOD(findCalendars:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
