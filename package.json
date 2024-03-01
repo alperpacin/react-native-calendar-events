@@ -1,5 +1,5 @@
 {
-  "name": "react-native-calendar-events",
+  "name": "@pacin/eact-native-calendar-events",
   "version": "2.2.1",
   "description": "React Native module for IOS Calendar Events",
   "homepage": "https://github.com/wmcmahan/react-native-calendar-events",
